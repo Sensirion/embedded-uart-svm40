@@ -70,6 +70,10 @@ TEST (SVM40_Tests, SVM40_Test_start_continuous_measurement) {
 
 TEST (SVM40_Tests, SVM40_Test_stop_measurement) {
     int16_t error;
+
+    error = svm40_start_continuous_measurement();
+    CHECK_EQUAL_ZERO_TEXT(error, "svm40_start_continuous_measurement");
+
     error = svm40_stop_measurement();
     CHECK_EQUAL_ZERO_TEXT(error, "svm40_stop_measurement");
 }
@@ -79,6 +83,10 @@ TEST (SVM40_Tests, SVM40_Test_read_measured_values_as_integers) {
     int16_t voc_index;
     int16_t humidity;
     int16_t temperature;
+
+    error = svm40_start_continuous_measurement();
+    CHECK_EQUAL_ZERO_TEXT(error, "svm40_start_continuous_measurement");
+
     error = svm40_read_measured_values_as_integers(&voc_index, &humidity,
                                                    &temperature);
     CHECK_EQUAL_ZERO_TEXT(error, "svm40_read_measured_values_as_integers");
@@ -96,6 +104,10 @@ TEST (SVM40_Tests,
     uint16_t raw_voc_ticks;
     int16_t raw_humidity;
     int16_t raw_temperature;
+
+    error = svm40_start_continuous_measurement();
+    CHECK_EQUAL_ZERO_TEXT(error, "svm40_start_continuous_measurement");
+
     error = svm40_read_measured_values_as_integers_with_raw_parameters(
         &voc_index, &humidity, &temperature, &raw_voc_ticks, &raw_humidity,
         &raw_temperature);
@@ -242,10 +254,4 @@ TEST (SVM40_Tests, SVM40_Test_get_system_up_time) {
     error = svm40_get_system_up_time(&system_up_time);
     CHECK_EQUAL_ZERO_TEXT(error, "svm40_get_system_up_time");
     printf("system_up_time: %i\n", system_up_time);
-}
-
-TEST (SVM40_Tests, SVM40_Test_enter_bootloader) {
-    int16_t error;
-    error = svm40_enter_bootloader();
-    CHECK_EQUAL_ZERO_TEXT(error, "svm40_enter_bootloader");
 }
