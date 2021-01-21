@@ -62,7 +62,7 @@ int main(void) {
     if (error) {
         printf("Error executing svm40_get_serial_number(): %i\n", error);
     } else {
-        printf("serial_number: %s\n", serial_number);
+        printf("Serial number: %s\n", serial_number);
     }
 
     uint8_t product_type[32];
@@ -71,7 +71,7 @@ int main(void) {
     if (error) {
         printf("Error executing svm40_get_product_type(): %i\n", error);
     } else {
-        printf("product_type: %s\n", product_type);
+        printf("Product type: %s\n", product_type);
     }
 
     uint8_t product_name[32];
@@ -80,7 +80,7 @@ int main(void) {
     if (error) {
         printf("Error executing svm40_get_product_name(): %i\n", error);
     } else {
-        printf("product_name: %s\n", product_name);
+        printf("Product name: %s\n", product_name);
     }
 
     uint8_t firmware_major;
@@ -96,13 +96,10 @@ int main(void) {
     if (error) {
         printf("Error executing svm40_get_version(): %i\n", error);
     } else {
-        printf("firmware_major: %i\n", firmware_major);
-        printf("firmware_minor: %i\n", firmware_minor);
-        printf("firmware_debug: %i\n", firmware_debug);
-        printf("hardware_major: %i\n", hardware_major);
-        printf("hardware_minor: %i\n", hardware_minor);
-        printf("protocol_major: %i\n", protocol_major);
-        printf("protocol_minor: %i\n", protocol_minor);
+        printf("Firmware: %i.%i Debug: %i\n", firmware_major, firmware_minor,
+               firmware_debug);
+        printf("Hardware: %i.%i\n", hardware_major, hardware_minor);
+        printf("Protocol: %i.%i\n", protocol_major, protocol_minor);
     }
 
     // Start Measurement
@@ -114,8 +111,21 @@ int main(void) {
 
     for (;;) {
         // Read Measurement
-        // TODO: check and update measurement interval
         sensirion_uart_hal_sleep_usec(1000000);
+        int16_t voc_index;
+        int16_t humidity;
+        int16_t temperature;
+        error = svm40_read_measured_values_as_integers(&voc_index, &humidity,
+                                                       &temperature);
+        if (error) {
+            printf("Error executing svm40_read_measured_values_as_integers(): "
+                   "%i\n",
+                   error);
+        } else {
+            printf("Voc index: %i\n", voc_index);
+            printf("Humidity: %i\n", humidity);
+            printf("Temperature: %i\n", temperature);
+        }
     }
 
     error = svm40_stop_measurement();
