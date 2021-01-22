@@ -16,4 +16,5 @@ test:
   tags: [mso-sw-testbed-2]
   script:
     - cd tests/
-    - make test
+    - make
+#    - make test
