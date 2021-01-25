@@ -3,7 +3,7 @@
  *
  * SHDLC-Generator: 0.8.2
  * Yaml Version: 0.3.0
- * Template Version: 0.2.0
+ * Template Version: 0.2.1
  */
 /*
  * Copyright (c) 2021, Sensirion AG
