@@ -253,5 +253,5 @@ TEST (SVM40_Tests, SVM40_Test_get_system_up_time) {
     uint32_t system_up_time;
     error = svm40_get_system_up_time(&system_up_time);
     CHECK_EQUAL_ZERO_TEXT(error, "svm40_get_system_up_time");
-    printf("system_up_time: %i\n", system_up_time);
+    printf("system_up_time: %u\n", system_up_time);
 }
