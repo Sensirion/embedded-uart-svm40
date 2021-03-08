@@ -3,7 +3,7 @@
 This is a generic embedded driver for the [Sensirion SVM40 VOC Sensor](https://www.sensirion.com/en/environmental-sensors/evaluation-kit-sek-svm40/).
 It enables developers to communicate with the SVM40 sensor on different hardware platforms by only adapting the UART communication related source files.
 
-<center><img src="https://www.sensirion.com/images/gas-sensors-394e0.png"></center>
+[<center><img src="images/SVM4x.png" width="500px"></center>](https://www.sensirion.com/en/environmental-sensors/evaluation-kit-sek-svm40/)
 
 # Getting started
 
