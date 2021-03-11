@@ -123,8 +123,8 @@ TEST (SVM40_Tests,
 
 TEST (SVM40_Tests, SVM40_Test_get_temperature_offset_for_rht_measurements) {
     int16_t error;
-    uint8_t t_offset[42];
-    uint8_t t_offset_size = 42;
+    uint8_t t_offset[2];
+    uint8_t t_offset_size = 2;
     error = svm40_get_temperature_offset_for_rht_measurements(&t_offset[0],
                                                               t_offset_size);
     CHECK_EQUAL_ZERO_TEXT(error,
@@ -156,20 +156,28 @@ TEST (SVM40_Tests, SVM40_Test_store_nv_data) {
 
 TEST (SVM40_Tests, SVM40_Test_set_temperature_offset_for_rht_measurements) {
     int16_t error;
-    uint8_t t_offset[42];
-    uint8_t t_offset_size = 42;
-    error = svm40_set_temperature_offset_for_rht_measurements(&t_offset[0],
-                                                              t_offset_size);
+
+    int16_t expected = 420;
+    error = svm40_set_temperature_offset_for_rht_measurements(expected);
     CHECK_EQUAL_ZERO_TEXT(error,
                           "svm40_set_temperature_offset_for_rht_measurements");
+
+    uint8_t t_offset_actual[2];
+    uint8_t t_offset_size = 2;
+    error = svm40_get_temperature_offset_for_rht_measurements(
+        &t_offset_actual[0], t_offset_size);
+    CHECK_EQUAL_ZERO_TEXT(error,
+                          "svm40_get_temperature_offset_for_rht_measurements");
+    float actual = sensirion_common_bytes_to_int16_t(&t_offset_actual[0]);
+    CHECK_EQUAL(expected, actual)
 }
 
 TEST (SVM40_Tests, SVM40_Test_set_voc_tuning_parameters) {
     int16_t error;
-    int16_t voc_index_offset = 0;
-    int16_t learning_time_hours = 0;
-    int16_t gating_max_duration_minutes = 0;
-    int16_t std_initial = 0;
+    int16_t voc_index_offset = 100;
+    int16_t learning_time_hours = 12;
+    int16_t gating_max_duration_minutes = 180;
+    int16_t std_initial = 50;
     error = svm40_set_voc_tuning_parameters(
         voc_index_offset, learning_time_hours, gating_max_duration_minutes,
         std_initial);
@@ -178,25 +186,26 @@ TEST (SVM40_Tests, SVM40_Test_set_voc_tuning_parameters) {
 
 TEST (SVM40_Tests, SVM40_Test_get_voc_state) {
     int16_t error;
-    uint8_t state[42];
-    uint8_t state_size = 42;
+    uint8_t state[8];
+    uint8_t state_size = 8;
     error = svm40_get_voc_state(&state[0], state_size);
-    CHECK_EQUAL_ZERO_TEXT(error, "svm40_get_voc_state");
-    printf("state: %s\n", state);
+    // This feature can only be used after at least 3 hours of continuous
+    // operation. Hence, we expect an error
+    CHECK_EQUAL_TEXT(-8, error, "svm40_get_voc_state");
 }
 
 TEST (SVM40_Tests, SVM40_Test_set_voc_state) {
     int16_t error;
-    uint8_t state[42];
-    uint8_t state_size = 42;
+    uint8_t state[8];
+    uint8_t state_size = 8;
     error = svm40_set_voc_state(&state[0], state_size);
     CHECK_EQUAL_ZERO_TEXT(error, "svm40_set_voc_state");
 }
 
 TEST (SVM40_Tests, SVM40_Test_get_product_type) {
     int16_t error;
-    uint8_t product_type[42];
-    uint8_t product_type_size = 42;
+    uint8_t product_type[32];
+    uint8_t product_type_size = 32;
     error = svm40_get_product_type(&product_type[0], product_type_size);
     CHECK_EQUAL_ZERO_TEXT(error, "svm40_get_product_type");
     printf("product_type: %s\n", product_type);
@@ -204,8 +213,8 @@ TEST (SVM40_Tests, SVM40_Test_get_product_type) {
 
 TEST (SVM40_Tests, SVM40_Test_get_product_name) {
     int16_t error;
-    uint8_t product_name[42];
-    uint8_t product_name_size = 42;
+    uint8_t product_name[32];
+    uint8_t product_name_size = 32;
     error = svm40_get_product_name(&product_name[0], product_name_size);
     CHECK_EQUAL_ZERO_TEXT(error, "svm40_get_product_name");
     printf("product_name: %s\n", product_name);
@@ -213,8 +222,8 @@ TEST (SVM40_Tests, SVM40_Test_get_product_name) {
 
 TEST (SVM40_Tests, SVM40_Test_get_serial_number) {
     int16_t error;
-    uint8_t serial_number[42];
-    uint8_t serial_number_size = 42;
+    uint8_t serial_number[32];
+    uint8_t serial_number_size = 32;
     error = svm40_get_serial_number(&serial_number[0], serial_number_size);
     CHECK_EQUAL_ZERO_TEXT(error, "svm40_get_serial_number");
     printf("serial_number: %s\n", serial_number);
