@@ -35,10 +35,10 @@
 #include "sensirion_uart_hal.h"
 #include "svm40_uart.h"
 
-/**
- * TO USE CONSOLE OUTPUT (PRINTF) AND PLATFORM
+/* TO USE CONSOLE OUTPUT (printf) YOU MAY NEED TO ADAPT THE
+ * INCLUDE ABOVE OR DEFINE IT ACCORDING TO YOUR PLATFORM.
+ * #define printf(...)
  */
-//#define printf(...)
 
 int main(void) {
     int16_t error = 0;
@@ -95,6 +95,24 @@ int main(void) {
         printf("Protocol: %i.%i\n", protocol_major, protocol_minor);
     }
 
+    if (firmware_major < 2) {
+        printf("Your SVM40 firmware is out of date!\n");
+    } else {
+        uint8_t t_offset_buffer[2];
+        uint8_t t_offset_size = 2;
+        error = svm40_get_temperature_offset_for_rht_measurements(
+            &t_offset_buffer[0], t_offset_size);
+        int16_t t_offset =
+            sensirion_common_bytes_to_int16_t(&t_offset_buffer[0]);
+        if (error) {
+            printf("Error executing "
+                   "svm40_get_temperature_offset_for_rht_measurements(): %i\n",
+                   error);
+        } else {
+            printf("Temperature Offset: %i ticks\n", t_offset);
+        }
+    }
+
     // Start Measurement
     error = svm40_start_continuous_measurement();
     if (error) {
@@ -115,9 +133,9 @@ int main(void) {
                    "%i\n",
                    error);
         } else {
-            printf("Voc index: %i\n", voc_index);
-            printf("Humidity: %i\n", humidity);
-            printf("Temperature: %i\n", temperature);
+            printf("Voc index: %i ticks\n", voc_index);
+            printf("Humidity: %i ticks\n", humidity);
+            printf("Temperature: %i ticks\n", temperature);
         }
     }
 
