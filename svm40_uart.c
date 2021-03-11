@@ -151,7 +151,7 @@ int16_t
 svm40_get_temperature_offset_for_rht_measurements(uint8_t* t_offset,
                                                   uint8_t t_offset_size) {
     struct sensirion_shdlc_rx_header header;
-    uint8_t buffer[522];
+    uint8_t buffer[20];
     struct sensirion_shdlc_buffer frame;
     sensirion_shdlc_begin_frame(&frame, &buffer[0], 0x60, SVM40_UART_ADDRESS,
                                 1);
@@ -165,7 +165,7 @@ svm40_get_temperature_offset_for_rht_measurements(uint8_t* t_offset,
 
     sensirion_uart_hal_sleep_usec(50000);
 
-    error = sensirion_shdlc_rx_inplace(&frame, 255, &header);
+    error = sensirion_shdlc_rx_inplace(&frame, 6, &header);
     if (error) {
         return error;
     }
@@ -228,16 +228,19 @@ int16_t svm40_store_nv_data() {
 }
 
 int16_t
-svm40_set_temperature_offset_for_rht_measurements(uint8_t* t_offset,
-                                                  uint8_t t_offset_size) {
+svm40_set_temperature_offset_for_rht_measurements(const int16_t t_offset) {
     struct sensirion_shdlc_rx_header header;
-    uint8_t buffer[520];
+    uint8_t buffer[16];
     struct sensirion_shdlc_buffer frame;
     sensirion_shdlc_begin_frame(&frame, &buffer[0], 0x60, SVM40_UART_ADDRESS,
-                                255);
+                                3);
     sensirion_shdlc_add_uint8_t_to_frame(&frame, 0x81);
 
-    sensirion_shdlc_add_bytes_to_frame(&frame, t_offset, t_offset_size);
+    uint8_t t_offset_buffer[2];
+    uint8_t t_offset_size = 2;
+    sensirion_common_int16_t_to_bytes(t_offset, t_offset_buffer);
+    sensirion_shdlc_add_bytes_to_frame(&frame, &t_offset_buffer[0],
+                                       t_offset_size);
 
     sensirion_shdlc_finish_frame(&frame);
     int16_t error = sensirion_shdlc_tx_frame(&frame);
@@ -248,10 +251,7 @@ svm40_set_temperature_offset_for_rht_measurements(uint8_t* t_offset,
     sensirion_uart_hal_sleep_usec(50000);
 
     error = sensirion_shdlc_rx_inplace(&frame, 0, &header);
-    if (error) {
-        return error;
-    }
-    return NO_ERROR;
+    return error;
 }
 
 int16_t svm40_set_voc_tuning_parameters(int16_t voc_index_offset,

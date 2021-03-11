@@ -125,7 +125,7 @@ int16_t svm40_read_measured_values_as_integers_with_raw_parameters(
  * svm40_get_temperature_offset_for_rht_measurements() - Gets the T-Offset for
  * the temperature compensation of the RHT algorithm.
  *
- * @param t_offset Temperature offset whith is used for the RHT measurements.
+ * @param t_offset Temperature offset which is used for the RHT measurements.
  * Firmware versions prior to 2.0 will return a float value (4 bytes). For
  * firmware version >= 2.0 an int16 value (2 bytes) is returned. Float
  * temperature values are in degrees celsius with no scaling. Integer
@@ -179,16 +179,16 @@ int16_t svm40_store_nv_data(void);
  * the non-volatile memory of the device otherwise the parameter will be reset
  * upton a device reset.
  *
- * @param t_offset Temperature offset in degrees celsius. Accepted data formats
- * are either a float value (4 bytes) or an int16 value (2 bytes). Float
- * temperature values are in degrees celsius with no scaling. Integer
- * temperature values are in degrees celsius with a scaling of 200.
+ * @note Only available in firmware version >= 2.0. For older firmware versions,
+ * a float value is expected, hence adaptions are required. We suggest updating
+ * the firmware version of the SVM40 module.
+ *
+ * @param t_offset Temperature offset in degrees celsius with a scaling of 200.
  *
  * @return 0 on success, an error code otherwise
  */
 int16_t
-svm40_set_temperature_offset_for_rht_measurements(uint8_t* t_offset,
-                                                  uint8_t t_offset_size);
+svm40_set_temperature_offset_for_rht_measurements(const int16_t t_offset);
 
 /**
  * svm40_set_voc_tuning_parameters() - Sets parameters to customize the VOC
