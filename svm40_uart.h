@@ -319,8 +319,6 @@ int16_t svm40_device_reset(void);
 /**
  * svm40_get_system_up_time() - Get the system up time of the device.
  *
- * @note None
- *
  * @param system_up_time The time since the last power-on or device reset in
  * seconds.
  *
