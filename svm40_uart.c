@@ -337,7 +337,7 @@ int16_t svm40_set_voc_state(uint8_t* state, uint8_t state_size) {
 int16_t svm40_get_product_type(uint8_t* product_type,
                                uint8_t product_type_size) {
     struct sensirion_shdlc_rx_header header;
-    uint8_t buffer[522];
+    uint8_t buffer[76];
     struct sensirion_shdlc_buffer frame;
     sensirion_shdlc_begin_frame(&frame, &buffer[0], 0xD0, SVM40_UART_ADDRESS,
                                 1);
@@ -351,7 +351,7 @@ int16_t svm40_get_product_type(uint8_t* product_type,
 
     sensirion_uart_hal_sleep_usec(50000);
 
-    error = sensirion_shdlc_rx_inplace(&frame, 255, &header);
+    error = sensirion_shdlc_rx_inplace(&frame, 32, &header);
     if (error) {
         return error;
     }
@@ -362,7 +362,7 @@ int16_t svm40_get_product_type(uint8_t* product_type,
 int16_t svm40_get_product_name(uint8_t* product_name,
                                uint8_t product_name_size) {
     struct sensirion_shdlc_rx_header header;
-    uint8_t buffer[522];
+    uint8_t buffer[76];
     struct sensirion_shdlc_buffer frame;
     sensirion_shdlc_begin_frame(&frame, &buffer[0], 0xD0, SVM40_UART_ADDRESS,
                                 1);
@@ -376,7 +376,7 @@ int16_t svm40_get_product_name(uint8_t* product_name,
 
     sensirion_uart_hal_sleep_usec(50000);
 
-    error = sensirion_shdlc_rx_inplace(&frame, 255, &header);
+    error = sensirion_shdlc_rx_inplace(&frame, 32, &header);
     if (error) {
         return error;
     }
@@ -387,7 +387,7 @@ int16_t svm40_get_product_name(uint8_t* product_name,
 int16_t svm40_get_serial_number(uint8_t* serial_number,
                                 uint8_t serial_number_size) {
     struct sensirion_shdlc_rx_header header;
-    uint8_t buffer[522];
+    uint8_t buffer[76];
     struct sensirion_shdlc_buffer frame;
     sensirion_shdlc_begin_frame(&frame, &buffer[0], 0xD0, SVM40_UART_ADDRESS,
                                 1);
@@ -401,7 +401,7 @@ int16_t svm40_get_serial_number(uint8_t* serial_number,
 
     sensirion_uart_hal_sleep_usec(50000);
 
-    error = sensirion_shdlc_rx_inplace(&frame, 255, &header);
+    error = sensirion_shdlc_rx_inplace(&frame, 32, &header);
     if (error) {
         return error;
     }
